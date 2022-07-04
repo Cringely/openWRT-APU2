@@ -14,12 +14,12 @@ jobs:
 
   steps:
   - task: ado-discord-webhook@1
-  inputs:
-    channelId: $(channelId)
-    webhookKey: $(webhookKey)
-    name: '$(openwrtRelease)_$(Build.BuildNumber)'
-    messageType: 'content'
-    content: '$(Agent.JobName) - $(Agent.JobStatus) - $(Build.Reason)'
+    inputs:
+      channelId: $(channelId)
+      webhookKey: $(webhookKey)
+      name: '$(openwrtRelease)_$(Build.BuildNumber)'
+      messageType: 'content'
+      content: '$(Agent.JobName) - $(Agent.JobStatus) - $(Build.Reason)'
 
   - script: |
       sudo apt update
