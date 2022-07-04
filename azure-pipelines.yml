@@ -1,0 +1,90 @@
+trigger:
+  - master
+
+jobs:
+- job: Build
+  timeoutInMinutes: 0
+
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  variables:
+    openwrtRelease: 'v21.02.3'
+    workingDirectory: '$(Build.SourcesDirectory)/openwrt'
+
+  steps:
+  - script: |
+      sudo apt update
+      sudo apt upgrade
+      sudo apt-get -q -y install build-essential ccache ecj fastjar file g++ gawk gettext git java-propose-classpath libelf-dev libncurses5-dev libncursesw5-dev libssl-dev python python2.7-dev python3 unzip wget python-distutils-extra python3-setuptools python3-dev rsync subversion swig time xsltproc zlib1g-dev
+    displayName: 'Install dependencies'
+
+  - script: |
+      umask 0022
+      git clone https://github.com/openwrt/openwrt.git
+    displayName: 'Clone OpenWrt git repo'
+
+  - script: git checkout $(openwrtRelease)
+    workingDirectory: $(workingDirectory)
+    displayName: 'Checkout $(openwrtRelease)'
+
+  - script: |
+      VERSION=`cat version`
+      echo OpenWrt version is $VERSION
+      echo "##vso[task.setvariable variable=openwrtVersion]$VERSION"
+    workingDirectory: $(workingDirectory)
+    displayName: 'Get version'
+
+  - script: |
+      ./scripts/feeds update -a
+      ./scripts/feeds install -a
+    workingDirectory: $(workingDirectory)
+    displayName: 'Update package feeds'
+
+  - script: |
+      cp .config $(workingDirectory)
+    displayName: 'Copy .config file'
+
+  - script: |
+      make defconfig
+    workingDirectory: $(workingDirectory)
+    displayName: 'Make defconfig'
+
+  - script: |
+      NPROC=$((`nproc`+1))
+      echo Number of CPUs is $NPROC
+      df -h
+    displayName: 'Print number of CPUs'
+
+  - script: |
+      make -j$((`nproc`+1)) V=sw
+    workingDirectory: $(workingDirectory)
+    displayName: 'Build the project'
+
+  - script: df -h
+    displayName: 'Print disk space'
+
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: $(workingDirectory)/bin/targets/x86/64
+      contents: '*'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: drop'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/*'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
+
+  - task: GithubRelease@0
+    displayName: 'Create GitHub Release'
+    inputs:
+      gitHubConnection: github.com_Cringely
+      repositoryName: Cringely/testbuild
+      tagSource: manual
+      tag: '$(openwrtRelease)_$(Build.BuildNumber)'
+      assets: |
+        $(Build.ArtifactStagingDirectory)/*
