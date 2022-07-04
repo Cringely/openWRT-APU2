@@ -88,3 +88,11 @@ jobs:
       tag: '$(openwrtRelease)_$(Build.BuildNumber)'
       assets: |
         $(Build.ArtifactStagingDirectory)/*
+
+- task: ado-discord-webhook@1
+  inputs:
+    channelId: $(channelId)
+    webhookKey: $(webhookKey)
+    name: '$(openwrtRelease)_$(Build.BuildNumber)'
+    messageType: 'content'
+    content: '$(Agent.JobName) - $(Agent.JobStatus)'
