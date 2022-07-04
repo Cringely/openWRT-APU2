@@ -81,12 +81,6 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: drop'
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/*'
-      ArtifactName: 'drop'
-      publishLocation: 'Container'
-
   - task: GithubRelease@0
     displayName: 'Create GitHub Release'
     inputs:
