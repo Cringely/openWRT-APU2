@@ -19,7 +19,9 @@ jobs:
       webhookKey: '$(webhookKey)'
       name: '$(openwrtRelease)_$(Build.BuildNumber)'
       messageType: 'content'
-      content: '$(Agent.JobName) - $(Agent.JobStatus) - $(Build.Reason)'
+      content: |
+        'Build $(Agent.JobName) Started 
+        Pipeline started $(Build.Reason)'
 
   - script: |
       sudo apt update
@@ -97,4 +99,4 @@ jobs:
       webhookKey: '$(webhookKey)'
       name: '$(openwrtRelease)_$(Build.BuildNumber)'
       messageType: 'content'
-      content: '$(Agent.JobName) - $(Agent.JobStatus)'
+      content: ' Completed $(Agent.JobName) with status $(Agent.JobStatus)'
