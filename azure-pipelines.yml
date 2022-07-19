@@ -13,6 +13,16 @@ jobs:
     workingDirectory: '$(Build.SourcesDirectory)/openwrt'
 
   steps:
+  - task: ado-discord-webhook@1
+  inputs:
+    channelId: '$(channelId)'
+    webhookKey: '$(webhookKey)'
+    name: '$(openwrtRelease)_$(Build.BuildNumber)'
+    messageType: 'content'
+    content: |
+      'Build $(Agent.JobName) Started 
+      Pipeline started $(Build.Reason)'
+  
   - script: |
       sudo apt update
       sudo apt upgrade
@@ -82,3 +92,11 @@ jobs:
       tag: '$(openwrtRelease)_$(Build.BuildNumber)'
       assets: |
         $(Build.ArtifactStagingDirectory)/*
+        
+  - task: ado-discord-webhook@1
+    inputs:
+      channelId: '$(channelId)'
+      webhookKey: '$(webhookKey)'
+      name: '$(openwrtRelease)_$(Build.BuildNumber)'
+      messageType: 'content'
+      content: ' Completed $(Agent.JobName) with status $(Agent.JobStatus)'
