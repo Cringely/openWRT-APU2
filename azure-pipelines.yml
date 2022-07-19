@@ -9,20 +9,10 @@ jobs:
     vmImage: 'ubuntu-latest'
 
   variables:
-    openwrtRelease: 'v21.02.3'
+    openwrtRelease: 'openwrt-21.02'
     workingDirectory: '$(Build.SourcesDirectory)/openwrt'
 
   steps:
-  - task: ado-discord-webhook@1
-    inputs:
-      channelId: '$(channelId)'
-      webhookKey: '$(webhookKey)'
-      name: '$(openwrtRelease)_$(Build.BuildNumber)'
-      messageType: 'content'
-      content: |
-        'Build $(Agent.JobName) Started 
-        Pipeline started $(Build.Reason)'
-
   - script: |
       sudo apt update
       sudo apt upgrade
@@ -67,7 +57,7 @@ jobs:
     displayName: 'Print number of CPUs'
 
   - script: |
-      make -j$((`nproc`+1)) V=sw
+      make -j$((`nproc`+1))
     workingDirectory: $(workingDirectory)
     displayName: 'Build the project'
 
@@ -92,11 +82,3 @@ jobs:
       tag: '$(openwrtRelease)_$(Build.BuildNumber)'
       assets: |
         $(Build.ArtifactStagingDirectory)/*
-
-  - task: ado-discord-webhook@1
-    inputs:
-      channelId: '$(channelId)'
-      webhookKey: '$(webhookKey)'
-      name: '$(openwrtRelease)_$(Build.BuildNumber)'
-      messageType: 'content'
-      content: ' Completed $(Agent.JobName) with status $(Agent.JobStatus)'
