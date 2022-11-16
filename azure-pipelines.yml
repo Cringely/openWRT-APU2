@@ -28,8 +28,9 @@ jobs:
       sudo apt update
       sudo apt upgrade
       sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
-      sudo apt autoremove
-      sudo apt autoclean
+      sudo apt-get -q -y autoremove
+      sudo apt-get -q -y autoclean
+      sudo apt-get -q -y clean
     displayName: 'Install dependencies'
 
   - script: |
@@ -49,6 +50,9 @@ jobs:
     workingDirectory: $(workingDirectory)
     displayName: 'Extract toolchain'
     
+  - script: cp .config $(workingDirectory)
+    displayName: 'Copy .config file'
+    
   - script: |
       sed -i 's!CONFIG_TOOLCHAIN_ROOT="/opt/cross/x86_64-unknown-linux-gnu"!CONFIG_TOOLCHAIN_ROOT="$(workingDirectory)/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64/toolchain-x86_64_$(gcc)_musl"!' .config
     workingDirectory: $(workingDirectory)
@@ -66,10 +70,6 @@ jobs:
       ./scripts/feeds install -a
     workingDirectory: $(workingDirectory)
     displayName: 'Update package feeds'
-
-  - script: |
-      cp .config $(workingDirectory)
-    displayName: 'Copy .config file'
 
   - script: |
       NPROC=$((`nproc`+1))
