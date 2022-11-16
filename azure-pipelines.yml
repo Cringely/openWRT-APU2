@@ -9,7 +9,7 @@ jobs:
     vmImage: 'ubuntu-latest'
 
   variables:
-    openwrtRelease: 'master'
+    openwrtRelease: '22.03.2'
     workingDirectory: '$(Build.SourcesDirectory)/openwrt'
 
   steps:
@@ -34,7 +34,7 @@ jobs:
       git clone https://github.com/openwrt/openwrt.git
     displayName: 'Clone OpenWrt git repo'
 
-  - script: git checkout $(openwrtRelease)
+  - script: git checkout v$(openwrtRelease)
     workingDirectory: $(workingDirectory)
     displayName: 'Checkout $(openwrtRelease)'
 
