@@ -9,7 +9,7 @@ jobs:
     vmImage: 'ubuntu-latest'
 
   variables:
-    openwrtRelease: 'openwrt-21.02'
+    openwrtRelease: 'openwrt-22.03.1'
     workingDirectory: '$(Build.SourcesDirectory)/openwrt'
 
   steps:
@@ -56,9 +56,9 @@ jobs:
     displayName: 'Copy .config file'
 
   - script: |
-      make defconfig
+      make -j$((`nproc`+1)) v=w menuconfig
     workingDirectory: $(workingDirectory)
-    displayName: 'Make defconfig'
+    displayName: 'Make menuconfig'
 
   - script: |
       NPROC=$((`nproc`+1))
@@ -67,7 +67,7 @@ jobs:
     displayName: 'Print number of CPUs'
 
   - script: |
-      make -j$((`nproc`+1))
+      make -j$((`nproc`+1)) v=w defconfig download clean world
     workingDirectory: $(workingDirectory)
     displayName: 'Build the project'
 
