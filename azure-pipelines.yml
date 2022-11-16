@@ -10,6 +10,7 @@ jobs:
 
   variables:
     openwrtRelease: '22.03.2'
+    gcc: 'gcc-11.2.0'
     workingDirectory: '$(Build.SourcesDirectory)/openwrt'
 
   steps:
@@ -26,7 +27,7 @@ jobs:
   - script: |
       sudo apt update
       sudo apt upgrade
-      sudo apt-get -q -y install build-essential ccache ecj fastjar file g++ gawk gettext git java-propose-classpath libelf-dev libncurses5-dev libncursesw5-dev libssl-dev python python2.7-dev python3 unzip wget python-distutils-extra python3-setuptools python3-dev rsync subversion swig time xsltproc zlib1g-dev
+      sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
     displayName: 'Install dependencies'
 
   - script: |
@@ -37,6 +38,19 @@ jobs:
   - script: git checkout v$(openwrtRelease)
     workingDirectory: $(workingDirectory)
     displayName: 'Checkout $(openwrtRelease)'
+    
+  - script: wget https://downloads.openwrt.org/releases/$(openwrtRelease)/targets/x86/64/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64.tar.xz
+    workingDirectory: $(workingDirectory)
+    displayName: 'Download toolchain'
+    
+  - script: tar -xf openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64.tar.xz
+    workingDirectory: $(workingDirectory)
+    displayName: 'Extract toolchain'
+    
+  - script: |
+      sed -i 's!CONFIG_TOOLCHAIN_ROOT="/opt/cross/x86_64-unknown-linux-gnu"!CONFIG_TOOLCHAIN_ROOT="$(workingDirectory)/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64/toolchain-x86_64_$(gcc)_musl"!' .config
+    workingDirectory: $(workingDirectory)
+    displayName: 'Update toolchain'
 
   - script: |
       VERSION=`cat version`
@@ -56,15 +70,15 @@ jobs:
     displayName: 'Copy .config file'
 
   - script: |
-      make -j$((`nproc`+1)) v=w menuconfig
-    workingDirectory: $(workingDirectory)
-    displayName: 'Make menuconfig'
-
-  - script: |
       NPROC=$((`nproc`+1))
       echo Number of CPUs is $NPROC
       df -h
     displayName: 'Print number of CPUs'
+    
+  - script: |
+      make -j$((`nproc`+1)) v=w menuconfig
+    workingDirectory: $(workingDirectory)
+    displayName: 'Make menuconfig'
 
   - script: |
       make -j$((`nproc`+1)) v=w defconfig download clean world
