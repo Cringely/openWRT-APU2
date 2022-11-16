@@ -78,11 +78,13 @@ jobs:
     displayName: 'Print number of CPUs'
     
   - script: |
+      export TERM=xterm
       make -j$((`nproc`+1)) v=w menuconfig
     workingDirectory: $(workingDirectory)
     displayName: 'Make menuconfig'
 
   - script: |
+      export TERM=xterm
       make -j$((`nproc`+1)) v=w defconfig download clean world
     workingDirectory: $(workingDirectory)
     displayName: 'Build the project'
