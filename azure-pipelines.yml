@@ -78,13 +78,13 @@ jobs:
     displayName: 'Print number of CPUs'
     
   - script: |
-      export TERM=xterm
+      export TERM=linux
       make -j$((`nproc`+1)) v=w menuconfig
     workingDirectory: $(workingDirectory)
     displayName: 'Make menuconfig'
 
   - script: |
-      export TERM=xterm
+      export TERM=linux
       make -j$((`nproc`+1)) v=w defconfig download clean world
     workingDirectory: $(workingDirectory)
     displayName: 'Build the project'
@@ -105,7 +105,7 @@ jobs:
     displayName: 'Create GitHub Release'
     inputs:
       gitHubConnection: github.com_Cringely
-      repositoryName: Cringely/testbuild
+      repositoryName: Cringely/openWRT-APU2
       tagSource: manual
       tag: '$(openwrtRelease)_$(Build.BuildNumber)'
       assets: |
