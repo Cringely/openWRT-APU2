@@ -52,6 +52,9 @@ jobs:
       tar -xf openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64.tar.xz
       ls -la
       rm -rf openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64.tar.xz
+      cd $(workingDirectory)/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64
+      ls -la
+      pwd
     workingDirectory: $(workingDirectory)
     displayName: 'Extract toolchain'
     
