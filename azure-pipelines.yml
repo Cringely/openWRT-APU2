@@ -42,28 +42,34 @@ jobs:
     workingDirectory: $(workingDirectory)
     displayName: 'Checkout $(openwrtRelease)'
     
-  - script: wget https://downloads.openwrt.org/releases/$(openwrtRelease)/targets/x86/64/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64.tar.xz
-    workingDirectory: $(workingDirectory)
-    displayName: 'Download toolchain'
+  #- script: wget https://downloads.openwrt.org/releases/$(openwrtRelease)/targets/x86/64/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64.tar.xz
+  #  workingDirectory: $(workingDirectory)
+  #  displayName: 'Download toolchain'
     
-  - script: |
-      tar -xf openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64.tar.xz
-      rm -rf openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64.tar.xz
-    workingDirectory: $(workingDirectory)
-    displayName: 'Extract toolchain'
+  #- script: |
+  #    tar -xf openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64.tar.xz
+  #    rm -rf openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64.tar.xz
+  #  workingDirectory: $(workingDirectory)
+  #  displayName: 'Extract toolchain'
     
   - script: cp .config $(workingDirectory)
     displayName: 'Copy .config file'
-    
+
   - script: |
-      #sed -i 's!CONFIG_TOOLCHAIN_ROOT="/opt/cross/x86_64-unknown-linux-gnu"!CONFIG_TOOLCHAIN_ROOT="$(workingDirectory)/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64/toolchain-x86_64_$(gcc)_musl"!' .config
-      ./scripts/ext-toolchain.sh \
-        --toolchain $(workingDirectory)/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64/toolchain-x86_64_$(gcc)_musl \
-        --overwrite-config \
-        --config 'x86/64'
-        cat .config
+      ./scripts/diffconfig.sh > diffconfig
+      cp diffconfig .config
     workingDirectory: $(workingDirectory)
-    displayName: 'Update toolchain'
+    displayName: 'create diffconfig'
+    
+  #- script: |
+  #    #sed -i 's!CONFIG_TOOLCHAIN_ROOT="/opt/cross/x86_64-unknown-linux-gnu"!CONFIG_TOOLCHAIN_ROOT="$(workingDirectory)/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64/toolchain-x86_64_$(gcc)_musl"!' .config
+  #    ./scripts/ext-toolchain.sh \
+  #      --toolchain $(workingDirectory)/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64/toolchain-x86_64_$(gcc)_musl \
+  #      --overwrite-config \
+  #      --config 'x86/64'
+  #      cat .config
+  #  workingDirectory: $(workingDirectory)
+  #  displayName: 'Update toolchain'
 
   - script: |
       VERSION=`cat version`
@@ -83,19 +89,19 @@ jobs:
       echo Number of CPUs is $NPROC
       df -h
     displayName: 'Print number of CPUs'
-  
-  - script: |
-      export TERM=linux
-      make -j$((`nproc`+1)) download
-    workingDirectory: $(workingDirectory)
-    displayName: 'make download'
-  
+
   - script: |
       export TERM=linux
       make -j$((`nproc`+1)) defconfig
     workingDirectory: $(workingDirectory)
     displayName: 'make defconfig'
 
+  - script: |
+      export TERM=linux
+      make -j$((`nproc`+1)) download
+    workingDirectory: $(workingDirectory)
+    displayName: 'make download'
+  
   - script: |
       export TERM=linux
       make -j$((`nproc`+1))
@@ -112,6 +118,7 @@ jobs:
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   - task: PublishBuildArtifacts@1
+    artifactName: 'openwrt-$(openwrtRelease)-x86-64-APU2-$(Build.BuildNumber)'
     displayName: 'Publish Artifact: drop'
 
   - task: GithubRelease@0
