@@ -83,6 +83,18 @@ jobs:
       echo Number of CPUs is $NPROC
       df -h
     displayName: 'Print number of CPUs'
+  
+    - script: |
+        export TERM=linux
+        make -j$((`nproc`+1)) download
+      workingDirectory: $(workingDirectory)
+      displayName: 'make download'
+  
+  - script: |
+      export TERM=linux
+      make -j$((`nproc`+1)) defconfig
+    workingDirectory: $(workingDirectory)
+    displayName: 'make defconfig'
 
   - script: |
       export TERM=linux
