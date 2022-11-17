@@ -118,8 +118,9 @@ jobs:
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   - task: PublishBuildArtifacts@1
-    artifactName: 'openwrt-$(openwrtRelease)-x86-64-APU2-$(Build.BuildNumber)'
-    displayName: 'Publish Artifact: drop'
+    inputs:
+      artifactName: 'openwrt-$(openwrtRelease)-x86-64-APU2-$(Build.BuildNumber)'
+      displayName: 'Publish Artifact: drop'
 
   - task: GithubRelease@0
     displayName: 'Create GitHub Release'
