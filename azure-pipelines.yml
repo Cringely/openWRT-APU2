@@ -26,8 +26,8 @@ jobs:
   
   - script: |
       sudo apt update
-      sudo apt upgrade
-      sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
+      #sudo apt upgrade
+      #sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
       sudo apt-get -q -y autoremove
       sudo apt-get -q -y autoclean
       sudo apt-get -q -y clean
@@ -47,9 +47,11 @@ jobs:
     displayName: 'Download toolchain'
     
   - script: |
+      pwd
       ls -la
       tar -xf openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64.tar.xz
       ls -la
+      rm -rf openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64.tar.xz
     workingDirectory: $(workingDirectory)
     displayName: 'Extract toolchain'
     
