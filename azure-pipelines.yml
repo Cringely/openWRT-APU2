@@ -55,6 +55,9 @@ jobs:
       cd $(workingDirectory)/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64
       ls -la
       pwd
+      cd $(workingDirectory)/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64/toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl
+      ls -la
+      pwd
     workingDirectory: $(workingDirectory)
     displayName: 'Extract toolchain'
     
@@ -64,7 +67,7 @@ jobs:
   - script: |
       #sed -i 's!CONFIG_TOOLCHAIN_ROOT="/opt/cross/x86_64-unknown-linux-gnu"!CONFIG_TOOLCHAIN_ROOT="$(workingDirectory)/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64/toolchain-x86_64_$(gcc)_musl"!' .config
       ./scripts/ext-toolchain.sh \
-        --toolchain $(workingDirectory)/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64 \
+        --toolchain $(workingDirectory)/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64/toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl \
         --overwrite-config \
         --config 'x86/64'        
     workingDirectory: $(workingDirectory)
