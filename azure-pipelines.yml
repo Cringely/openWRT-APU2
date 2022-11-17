@@ -60,7 +60,8 @@ jobs:
       ./scripts/ext-toolchain.sh \
         --toolchain $(workingDirectory)/openwrt-toolchain-$(openwrtRelease)-x86-64_$(gcc)_musl.Linux-x86_64/toolchain-x86_64_$(gcc)_musl \
         --overwrite-config \
-        --config 'x86/64'        
+        --config 'x86/64'
+        cat .config
     workingDirectory: $(workingDirectory)
     displayName: 'Update toolchain'
 
