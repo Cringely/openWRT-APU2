@@ -9,7 +9,7 @@ jobs:
     vmImage: 'ubuntu-22.04'
 
   variables:
-    openwrtRelease: '22.03.2'
+    openwrtRelease: '22.03.3'
     gcc: 'gcc-11.2.0'
     workingDirectory: '$(Build.SourcesDirectory)/openwrt'
 
