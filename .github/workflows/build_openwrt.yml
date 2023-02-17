@@ -1,0 +1,96 @@
+on:
+  push:
+    branches:
+    - master
+  workflow_dispatch:
+jobs:
+  Build:
+    runs-on: ubuntu-22.04
+    env:
+      openwrtRelease: 22.03.2
+      gcc: gcc-11.2.0
+      workingDirectory: ${{ github.workspace }}/openwrt
+    steps:
+    - uses: actions/checkout@v2
+    - # "Error: the step 'ado-discord-webhook@1' does not have a conversion path yet"
+      run: |
+        echo "Error: the step 'ado-discord-webhook@1' does not have a conversion path yet"
+        #task: ado-discord-webhook@1
+        #inputs:
+        #  channelid: ${{ env.channelId }}
+        #  webhookkey: ${{ env.webhookKey }}
+        #  name: ${{ env.openwrtRelease }}_${{ github.run_number }}
+        #  messagetype: content
+        #  content: 
+        #    'Build ${{ env.Agent.JobName }} Started 
+        #    Pipeline started ${{ env.Build.Reason }}'
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt-get -q -y upgrade
+        sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
+        sudo apt-get -q -y autoremove
+        sudo apt-get -q -y autoclean
+        sudo apt-get -q -y clean
+    - name: Clone OpenWrt git repo
+      run: |
+        umask 0022
+        git clone https://github.com/openwrt/openwrt.git
+    - name: Checkout ${{ env.openwrtRelease }}
+      run: git checkout v${{ env.openwrtRelease }}
+    - name: Copy .config file
+      run: cp .config ${{ env.workingDirectory }}
+    - name: create diffconfig
+      run: |
+        ./scripts/diffconfig.sh > diffconfig
+        cp diffconfig .config
+    - name: Get version
+      run: |
+        VERSION=`cat version`
+        echo OpenWrt version is $VERSION
+        echo "##vso[task.setvariable variable=openwrtVersion]$VERSION"
+    - name: Update package feeds
+      run: |
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+    - name: Print number of CPUs
+      run: |
+        NPROC=${{ env.(`nproc`+1 }})
+        echo Number of CPUs is $NPROC
+        df -h
+    - name: make defconfig
+      run: |
+        export TERM=linux
+        make -j${{ env.(`nproc`+1 }}) defconfig
+    - name: make download
+      run: |
+        export TERM=linux
+        make -j${{ env.(`nproc`+1 }}) download
+    - name: Build the project
+      run: |
+        export TERM=linux
+        make -j${{ env.(`nproc`+1 }})
+    - name: Print disk space
+      run: df -h
+    - run: Copy '${{ env.workingDirectory }}/bin/targets/x86/64/*' '${{ github.workspace }}'
+    - uses: actions/upload-artifact@v2
+      with:
+        path: 
+        name: openwrt-${{ env.openwrtRelease }}-x86-64-APU2-${{ github.run_number }}
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.openwrtRelease }}_${{ github.run_number }}
+    - # "Error: the step 'ado-discord-webhook@1' does not have a conversion path yet"
+      run: |
+        echo "Error: the step 'ado-discord-webhook@1' does not have a conversion path yet"
+        #task: ado-discord-webhook@1
+        #inputs:
+        #  channelid: ${{ env.channelId }}
+        #  webhookkey: ${{ env.webhookKey }}
+        #  name: ${{ env.openwrtRelease }}_${{ github.run_number }}
+        #  messagetype: content
+        #  content: ' Completed ${{ env.Agent.JobName }} with status ${{ env.Agent.JobStatus }}'
+                    
