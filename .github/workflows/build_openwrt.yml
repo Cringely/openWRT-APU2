@@ -46,14 +46,14 @@ jobs:
           #sudo rm -rf ${{ github.workspace }}/*.*
           #sudo rm -rf ${{ github.workspace }}/.git*
 
-      - name: Git Clone Action
-        uses: sudosubin/git-clone-action@v1.0.1
-
       - name: Checkout openwrt
         uses: actions/checkout@v3.3.0
         with:
           repository: openwrt/openwrt
           ref: v${{ env.openwrtRelease }}
+
+      - name: Git Clone Action
+        uses: sudosubin/git-clone-action@v1.0.1
 
       - name: Copy .config file
         run: |
