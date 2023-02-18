@@ -35,7 +35,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt-get -q -y full-upgrade
-          sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
+          sudo apt-get -q -y install build-essential coreutils clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
           sudo apt-get -q -y autoremove
           sudo apt-get -q -y autoclean
           sudo apt-get -q -y clean
