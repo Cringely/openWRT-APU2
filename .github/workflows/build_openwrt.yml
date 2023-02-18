@@ -58,31 +58,13 @@ jobs:
 
       - name: Copy .config file
         run: |
-          pwd
-          ls -la
-          cp .config ${{ env.workingDirectory }}
-
-      - name: create diffconfig
-        run: |
           ./scripts/diffconfig.sh > diffconfig
-          cp diffconfig .config
-
-      - name: Get version
-        run: |
-          VERSION=`cat version`
-          echo OpenWrt version is $VERSION
-          echo "##vso[task.setvariable variable=openwrtVersion]$VERSION"
-
-      - name: Update package feeds
-        run: |
+          cp .config ${{ env.workingDirectory }}/.config
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-
-      - name: Print number of CPUs
-        run: |
           NPROC=$(`nproc`+1)
           echo Number of CPUs is $NPROC
-          df -h
+          cd ${{ env.workingDirectory }}
 
       - name: make defconfig
         run: |
