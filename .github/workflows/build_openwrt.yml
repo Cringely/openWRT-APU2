@@ -7,16 +7,6 @@ on:
   pull_request:
   
 jobs:
-  clean:
-    name: prep worker
-    runs-on: ubuntu-latest
-    steps:
-      - name: clean worker
-        run: |
-          sudo rm -rf ${{ github.workspace }}/*
-          sudo rm -rf ${{ github.workspace }}/*.*
-          sudo rm -rf ${{ github.workspace }}/.git*
-             
   build:
     runs-on: ubuntu-latest
     env:
@@ -33,7 +23,6 @@ jobs:
       matrix:
         target: [ x86-64 ]
         
-
     steps:
       - name: Actions Status Discord
         uses: sarisia/actions-status-discord@v1.11.0
@@ -49,6 +38,12 @@ jobs:
           sudo apt-get -q -y autoremove
           sudo apt-get -q -y autoclean
           sudo apt-get -q -y clean
+          
+      - name: clean worker
+        run: |
+          sudo rm -rf ${{ github.workspace }}/*
+          sudo rm -rf ${{ github.workspace }}/*.*
+          sudo rm -rf ${{ github.workspace }}/.git*
           
       - name: Checkout openwrt
         uses: actions/checkout@v3.3.0
