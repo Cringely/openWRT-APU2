@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      openwrtRelease: latest
+      openwrtRelease: 22.03.3
       gcc: gcc-11.2.0
 
     #defaults:
