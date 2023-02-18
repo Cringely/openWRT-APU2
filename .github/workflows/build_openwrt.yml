@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [ x86-64, E8450 ]
+        target: [ x86-64 ]
         
 
     steps:
@@ -30,12 +30,6 @@ jobs:
         with:
           webhook: ${{ secrets.discordWebhook }}
       
-      - name: git cleanup
-        run: |
-          rm -rf ${{ github.workspace }}/*
-          rm -rf ${{ github.workspace }}/*.*
-          rm -rf ${{ github.workspace }}/.git*
-
       - name: Install and Update dependencies
         run: |
           sudo apt update
