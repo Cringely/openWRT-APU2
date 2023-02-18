@@ -61,7 +61,9 @@ jobs:
           ref: v${{ env.openwrtRelease }}
 
       - name: Copy .config file
-        run: cp .config ${{ env.workingDirectory }}
+        run: |
+          pwd
+          cp .config ${{ env.workingDirectory }}
 
       - name: create diffconfig
         run: |
