@@ -13,9 +13,10 @@ jobs:
       openwrtRelease: latest
       gcc: gcc-11.2.0
 
-    #defaults:
-      #run:
-        #working-directory: openwrt
+    defaults:
+      run:
+        shell: bash
+        working-directory: openwrt
     
     strategy:
       fail-fast: false
