@@ -2,41 +2,55 @@ name: Build OpenWRT
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
+  pull_request:
+  
 jobs:
-  Build:
+  build:
     runs-on: ubuntu-latest
     env:
-      openwrtRelease: 22.03.2
+      openwrtRelease: latest
       gcc: gcc-11.2.0
-      workingDirectory: ${{ github.workspace }}/openwrt
-    steps:
-      - uses: actions/checkout@v2
 
+    defaults:
+      run:
+        working-directory: openwrt
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [ x86-64, E8450 ]
+        
+
+    steps:
       - name: Actions Status Discord
         uses: sarisia/actions-status-discord@v1.11.0
         if: always()
         with:
           webhook: ${{ secrets.discordWebhook }}
+      
+      - name: git cleanup
+        run: |
+          rm -rf ${{ github.workspace }}/*
+          rm -rf ${{ github.workspace }}/*.*
+          rm -rf ${{ github.workspace }}/.git*
 
-      - name: Install dependencies
+      - name: Install and Update dependencies
         run: |
           sudo apt update
-          sudo apt-get -q -y upgrade
+          sudo apt-get -q -y full-upgrade
           sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
           sudo apt-get -q -y autoremove
           sudo apt-get -q -y autoclean
           sudo apt-get -q -y clean
-
-      - name: Clone OpenWrt git repo
-        run: |
-          umask 0022
-          git clone https://github.com/openwrt/openwrt.git
-          git tag
-
-      - name: Checkout v${{ env.openwrtRelease }}
-        run: git checkout v${{ env.openwrtRelease }}
+          
+      - name: Checkout openwrt
+        uses: actions/checkout@v3.3.0
+        with:
+          path: openwrt
+          repository: openwrt/openwrt
+          ref: latest
 
       - name: Copy .config file
         run: cp .config ${{ env.workingDirectory }}
