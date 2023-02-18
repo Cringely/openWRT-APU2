@@ -31,20 +31,20 @@ jobs:
         with:
           webhook: ${{ secrets.discordWebhook }}
 
-      #- name: Install and Update dependencies
-        #run: |
-          #sudo apt update
-          #sudo apt-get -q -y full-upgrade
-          #sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
-          #sudo apt-get -q -y autoremove
-          #sudo apt-get -q -y autoclean
-          #sudo apt-get -q -y clean
+      - name: Install and Update dependencies
+        run: |
+          sudo apt update
+          sudo apt-get -q -y full-upgrade
+          sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
+          sudo apt-get -q -y autoremove
+          sudo apt-get -q -y autoclean
+          sudo apt-get -q -y clean
 
-      #- name: clean worker
-        #run: |
-          #sudo rm -rf ${{ github.workspace }}/*
-          #sudo rm -rf ${{ github.workspace }}/*.*
-          #sudo rm -rf ${{ github.workspace }}/.git*
+      - name: clean worker
+        run: |
+          sudo rm -rf ${{ github.workspace }}/*
+          sudo rm -rf ${{ github.workspace }}/*.*
+          sudo rm -rf ${{ github.workspace }}/.git*
 
       - name: Git Clone Action
         uses: sudosubin/git-clone-action@v1.0.1
