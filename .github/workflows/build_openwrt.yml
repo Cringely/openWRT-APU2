@@ -72,10 +72,10 @@ jobs:
           cd ${{ env.workingDirectory }}
           ./scripts/feeds install -a
 
-      - name: Set nproc
-        run: |
-          NPROC=$(nproc+1)
-          echo Number of CPUs is $NPROC
+      #- name: Set nproc
+        #run: |
+          #NPROC=$(nproc+1)
+          #echo Number of CPUs is $NPROC
 
       - name: make defconfig
         run: |
