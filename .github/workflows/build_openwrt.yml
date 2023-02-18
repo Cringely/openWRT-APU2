@@ -49,7 +49,7 @@ jobs:
         uses: sudosubin/git-clone-action@v1.0.1
         with:
           repository: openwrt/openwrt
-          #ref: latest
+          ref: v${{ env.openwrtRelease }}
           path: openwrt
 
       - name: Checkout openwrt
