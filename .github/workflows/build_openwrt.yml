@@ -12,6 +12,7 @@ jobs:
     env:
       openwrtRelease: 22.03.3
       gcc: gcc-11.2.0
+      workingDirectory: openwrt
 
     #defaults:
     #run:
