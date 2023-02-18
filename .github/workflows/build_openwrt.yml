@@ -23,7 +23,6 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo snap remove firefox
         sudo apt-get -q -y upgrade
         sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
         sudo apt-get -q -y autoremove
