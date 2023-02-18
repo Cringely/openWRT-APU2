@@ -52,7 +52,7 @@ jobs:
       - name: Checkout openwrt
         uses: actions/checkout@v3.3.0
         with:
-          repository: openwrt/openwrtwwww
+          repository: openwrt/openwrt
           path: openwrt
           ref: v${{ env.openwrtRelease }}
 
