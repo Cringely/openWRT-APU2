@@ -9,22 +9,14 @@ on:
 jobs:
   clean:
     name: prep worker
+    runs-on: ubuntu-latest
     steps:
       - name: clean worker
         run: |
           sudo rm -rf ${{ github.workspace }}/*
           sudo rm -rf ${{ github.workspace }}/*.*
           sudo rm -rf ${{ github.workspace }}/.git*
-          
-      - name: Install and Update dependencies
-        run: |
-          sudo apt update
-          sudo apt-get -q -y full-upgrade
-          sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
-          sudo apt-get -q -y autoremove
-          sudo apt-get -q -y autoclean
-          sudo apt-get -q -y clean
-    
+             
   build:
     runs-on: ubuntu-latest
     env:
@@ -33,8 +25,8 @@ jobs:
 
     defaults:
       run:
-        shell: bash
-        working-directory: openwrt
+        #shell: bash
+        #working-directory: openwrt
     
     strategy:
       fail-fast: false
@@ -48,6 +40,15 @@ jobs:
         if: always()
         with:
           webhook: ${{ secrets.discordWebhook }}
+          
+      - name: Install and Update dependencies
+        run: |
+          sudo apt update
+          sudo apt-get -q -y full-upgrade
+          sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
+          sudo apt-get -q -y autoremove
+          sudo apt-get -q -y autoclean
+          sudo apt-get -q -y clean
           
       - name: Checkout openwrt
         uses: actions/checkout@v3.3.0
