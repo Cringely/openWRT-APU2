@@ -5,7 +5,7 @@ on:
       - main
   workflow_dispatch:
   pull_request:
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,44 +14,44 @@ jobs:
       gcc: gcc-11.2.0
 
     #defaults:
-      #run:
-        #shell: bash
-        #working-directory: openwrt
-    
+    #run:
+    #shell: bash
+    #working-directory: openwrt
+
     strategy:
       fail-fast: false
       matrix:
-        target: [ x86-64 ]
-        
+        target: [x86-64]
+
     steps:
       - name: Actions Status Discord
         uses: sarisia/actions-status-discord@v1.11.0
         if: always()
         with:
           webhook: ${{ secrets.discordWebhook }}
-          
-      - name: Install and Update dependencies
-        run: |
-          sudo apt update
-          sudo apt-get -q -y full-upgrade
-          sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
-          sudo apt-get -q -y autoremove
-          sudo apt-get -q -y autoclean
-          sudo apt-get -q -y clean
-          
-      - name: clean worker
-        run: |
-          sudo rm -rf ${{ github.workspace }}/*
-          sudo rm -rf ${{ github.workspace }}/*.*
-          sudo rm -rf ${{ github.workspace }}/.git*
-          
+
+      #- name: Install and Update dependencies
+        #run: |
+          #sudo apt update
+          #sudo apt-get -q -y full-upgrade
+          #sudo apt-get -q -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev
+          #sudo apt-get -q -y autoremove
+          #sudo apt-get -q -y autoclean
+          #sudo apt-get -q -y clean
+
+      #- name: clean worker
+        #run: |
+          #sudo rm -rf ${{ github.workspace }}/*
+          #sudo rm -rf ${{ github.workspace }}/*.*
+          #sudo rm -rf ${{ github.workspace }}/.git*
+
       - name: Git Clone Action
         uses: sudosubin/git-clone-action@v1.0.1
         with:
           repository: openwrt/openwrt
-          ref: latest
+          #ref: latest
           path: openwrt
-          
+
       - name: Checkout openwrt
         uses: actions/checkout@v3.3.0
         with:
