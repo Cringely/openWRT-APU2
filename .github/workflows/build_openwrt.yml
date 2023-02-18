@@ -58,13 +58,13 @@ jobs:
 
       - name: Copy .config file
         run: |
-          ./scripts/diffconfig.sh > diffconfig
-          cp .config ${{ env.workingDirectory }}/.config
+          cp .config ${{ env.workingDirectory }}
+          cd ${{ env.workingDirectory }}
+          ./scripts/diffconfig.sh > .config
           ./scripts/feeds update -a
           ./scripts/feeds install -a
           NPROC=$(`nproc`+1)
           echo Number of CPUs is $NPROC
-          cd ${{ env.workingDirectory }}
 
       - name: make defconfig
         run: |
