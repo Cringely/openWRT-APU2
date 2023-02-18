@@ -64,10 +64,12 @@ jobs:
 
       - name: update feeds
         run: |
+          cd ${{ env.workingDirectory }}
           ./scripts/feeds update -a
 
       - name: install feeds
         run: |
+          cd ${{ env.workingDirectory }}
           ./scripts/feeds install -a
 
       - name: Set nproc
@@ -78,16 +80,19 @@ jobs:
       - name: make defconfig
         run: |
           export TERM=linux
+          cd ${{ env.workingDirectory }}
           make -j$(`nproc`+1) defconfig
 
       - name: make download
         run: |
           export TERM=linux
+          cd ${{ env.workingDirectory }}
           make -j$(`nproc`+1) download
 
       - name: Build the project
         run: |
           export TERM=linux
+          cd ${{ env.workingDirectory }}
           make -j$(`nproc`+1)
 
       - name: Print disk space
