@@ -49,8 +49,6 @@ jobs:
       - name: Git Clone Action
         uses: sudosubin/git-clone-action@v1.0.1
         with:
-          repository: openwrt/openwrt
-          ref: v${{ env.openwrtRelease }}
           path: openwrt
 
       - name: Checkout openwrt
