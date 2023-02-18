@@ -74,26 +74,26 @@ jobs:
 
       - name: Set nproc
         run: |
-          NPROC=$(`nproc`+1)
+          NPROC=$(nproc+1)
           echo Number of CPUs is $NPROC
 
       - name: make defconfig
         run: |
           export TERM=linux
           cd ${{ env.workingDirectory }}
-          make -j$(`nproc`+1) defconfig
+          make -j$(nproc+1) defconfig
 
       - name: make download
         run: |
           export TERM=linux
           cd ${{ env.workingDirectory }}
-          make -j$(`nproc`+1) download
+          make -j$(nproc+1) download
 
       - name: Build the project
         run: |
           export TERM=linux
           cd ${{ env.workingDirectory }}
-          make -j$(`nproc`+1)
+          make -j$(nproc+1)
 
       - name: Print disk space
         run: df -h
