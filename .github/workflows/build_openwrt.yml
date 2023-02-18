@@ -33,8 +33,9 @@ jobs:
       run: |
         umask 0022
         git clone https://github.com/openwrt/openwrt.git
+        git tag
     
-    - name: Checkout ${{ env.openwrtRelease }}
+    - name: Checkout v${{ env.openwrtRelease }}
       run: git checkout v${{ env.openwrtRelease }}
     
     - name: Copy .config file
