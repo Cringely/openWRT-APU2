@@ -57,7 +57,7 @@ jobs:
         with:
           repository: openwrt/openwrt
           path: openwrt
-          ref: ${{ env.openwrtRelease }}
+          ref: v${{ env.openwrtRelease }}
 
       - name: Copy .config file
         run: cp .config ${{ env.workingDirectory }}
