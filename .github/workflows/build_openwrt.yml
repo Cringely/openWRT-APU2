@@ -61,6 +61,7 @@ jobs:
       - name: Copy .config file
         run: |
           pwd
+          ls -la
           cp .config ${{ env.workingDirectory }}
 
       - name: create diffconfig
