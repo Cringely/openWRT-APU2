@@ -18,6 +18,7 @@ jobs:
       # You may pin to the exact commit or the version.
       # uses: sarisia/actions-status-discord@2947ebd8725337da402c454d25063e48e754f793
       uses: sarisia/actions-status-discord@v1.11.0
+      if: always()
       with:
         # Discord webhook endpoint. If not set, env.DISCORD_WEBHOOK will be used.
         webhook: ${{ secrets.discordWebhook }}
@@ -129,6 +130,7 @@ jobs:
       # You may pin to the exact commit or the version.
       # uses: sarisia/actions-status-discord@2947ebd8725337da402c454d25063e48e754f793
       uses: sarisia/actions-status-discord@v1.11.0
+      if: always()
       with:
         # Discord webhook endpoint. If not set, env.DISCORD_WEBHOOK will be used.
         webhook: ${{ secrets.discordWebhook }}
